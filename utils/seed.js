@@ -23,11 +23,11 @@ connection.once('open', async () => {
 
   // Loop 20 times -- add users to the users array
   for (let i = 0; i < 20; i++) {
-    // Get some random assignment objects using a helper function that we imported from ./data
-    const thoughts = getRandomThoughts(20);
+    // Get some random reaction objects using a helper function that we imported from ./data
+    const thoughts = getRandomThoughts(5);
 
     const username = getRandomName();
-    const email = `${username}'@gmail.com`;
+    const email = `${username}@gmail.com`;
 
     users.push({
       username,
@@ -37,11 +37,11 @@ connection.once('open', async () => {
     });
   }
 
-  // Add students to the collection and await the results
+  // Add users to the collection and await the results
   const userData = await User.insertMany(users);
 
   // Add courses to the collection and await the results
-  // await Course.insertOne({
+  // Course.insertOne({
   const thoughts = await Thought.insertMany({
     thoughtText: 'Thinking...',
     createdAt: Date.now(),
