@@ -79,7 +79,8 @@ module.exports = {
       );
 
       if (!user) {
-        res.status(404).json({ message: 'No user with this id!' });
+        res.status(404)
+        .json({ message: 'No user with this id!' });
       }
 
       res.json(user);
@@ -103,15 +104,15 @@ module.exports = {
 
 
 
-  // Add an reaction to a user
-  async addReaction(req, res) {
-    console.log('You are adding an reaction');
+  // Add a friend to a user's friendlist
+  async addFriend(req, res) {
+    console.log('You are adding a friend!');
     console.log(req.body);
 
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $addToSet: { reactions: req.body } },
+        { $addToSet: { friends: req.body } },
         { runValidators: true, new: true }
       );
 
@@ -126,12 +127,14 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Remove reaction from a user
-  async removeReaction(req, res) {
+
+
+  // Delete friend from a user's friendlist
+  async removeFriend(req, res) {
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $pull: { reaction: { reactionId: req.params.reactionId } } },
+        { $pull: { friends: { userId: req.params.userId } } },
         { runValidators: true, new: true }
       );
 
