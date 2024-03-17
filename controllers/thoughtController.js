@@ -38,10 +38,10 @@ module.exports = {
       if (!user) {
         return res
           .status(404)
-          .json({ message: 'Post created, but found no user that ID' });
+          .json({ message: 'Post created, but found no user with that ID' });
       }
 
-      res.json('Created the thought!');
+      res.json('Thought created!');
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
