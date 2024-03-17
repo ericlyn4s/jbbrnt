@@ -32,7 +32,7 @@ module.exports = {
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $push: { thoughts: thoughtId} },
+        { $push: { thoughts: req.params.thoughtId } },
         { runValidators: true, new: true }
       );
 
