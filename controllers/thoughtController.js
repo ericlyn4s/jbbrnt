@@ -26,14 +26,32 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Create a thought
+
+  // Create a thought and add it to associated user's thoughts array
   async createThought(req, res) {
     try {
-      const thought = await Thought.create(req.body);
-      res.json(thought);
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $push: { thoughts: thoughtId} },
+        { runValidators: true, new: true }
+      );
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: 'No user found with that ID :(' });
+      }
+      
+      res.json(user);
     } catch (err) {
-      console.log(err);
-      return res.status(500).json(err);
+      res.status(500).json(err);
+    }
+
+    try {
+      const user = await User.create(req.body);
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
     }
   },
   

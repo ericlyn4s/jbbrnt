@@ -89,21 +89,6 @@ module.exports = {
     }
   },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   // Add a friend to a user's friendlist
   async addFriend(req, res) {
     console.log('You are adding a friend!');
