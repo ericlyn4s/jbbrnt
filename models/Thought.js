@@ -19,15 +19,14 @@ const thoughtSchema = new Schema(
         return time.toLocaleString() 
       },
     },
-    username: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-      },
-    ], 
+    username: {
+        type: String
+    },
+ 
     reaction: [reactionSchema],
   },
   {
+    id: false,
     toJSON: {
       virtuals: true,
     },

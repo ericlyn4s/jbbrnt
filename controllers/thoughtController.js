@@ -4,7 +4,8 @@ module.exports = {
   // Get all thoughts
   async getThoughts(req, res) {
     try {
-      const thoughts = await Thought.find().populate('users');
+      const thoughts = await Thought.find()
+      .select('-__v');
       res.json(thoughts);
     } catch (err) {
       res.status(500).json(err);
@@ -15,14 +16,17 @@ module.exports = {
   async getSingleThought(req, res) {
     try {
       const thought = await Thought.findOne({ _id: req.params.thoughtId })
-        .populate('users');
+        .select('-__v');
 
       if (!thought) {
         return res.status(404).json({ message: 'No thought with that ID' });
       }
 
-      res.json(thought);
+      res.json({
+        thought,
+      });
     } catch (err) {
+      console.log(err);
       res.status(500).json(err);
     }
   },
@@ -33,12 +37,10 @@ module.exports = {
     try {
       // New thought is created
       const thought = await Thought.create(req.body);
-      res.json(thought);
       
-      // Take the created thought’s id and pass it into the method where we updating the users data
-      {
+      // Take the created thought's id and pass it into the method where we updating the users data
         const user = await User.findOneAndUpdate(
-          { _id: req.params.userId },
+          { _id: req.body.userId },
           { $push: { thoughts: thought.id } },
           { runValidators: true, new: true }
         );
@@ -47,11 +49,10 @@ module.exports = {
       if (!user) {
         return res
           .status(404)
-          .json({ message: 'Thought was created but no user found with that ID :(' });
+          .json({ message: 'Thought was created but no user found with that ID :(', thought });
       }
       // If successful, a success message is posted
-      res.json(user);
-    }
+      res.json({user, message: 'Thought was added to user'});
     } catch (err) {
       res.status(500).json(err);
     }
@@ -66,7 +67,7 @@ module.exports = {
         res.status(404).json({ message: 'No thought with that ID' });
       }
 
-      await User.deleteMany({ _id: { $in: thought.username } });
+      await User.deleteMany({ _id: { $in: user.thoughts } });
       res.json({ message: 'Thought deleted!' });
     } catch (err) {
       res.status(500).json(err);
