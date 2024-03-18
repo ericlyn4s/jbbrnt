@@ -29,27 +29,29 @@ module.exports = {
 
   // Create a thought and add it to associated user's thoughts array
   async createThought(req, res) {
-    try {
-      const user = await User.findOneAndUpdate(
-        { _id: req.params.userId },
-        { $push: { thoughts: req.params.thoughtId } },
-        { runValidators: true, new: true }
-      );
 
+    try {
+      // New thought is created
+      const thought = await Thought.create(req.body);
+      res.json(thought);
+      
+      // Take the created thought’s id and pass it into the method where we updating the users data
+      {
+        const user = await User.findOneAndUpdate(
+          { _id: req.params.userId },
+          { $push: { thoughts: thought.id } },
+          { runValidators: true, new: true }
+        );
+          
+      // Do a check to see if Thought was created but no user found with that ID
       if (!user) {
         return res
           .status(404)
-          .json({ message: 'No user found with that ID :(' });
+          .json({ message: 'Thought was created but no user found with that ID :(' });
       }
-      
+      // If successful, a success message is posted
       res.json(user);
-    } catch (err) {
-      res.status(500).json(err);
     }
-
-    try {
-      const user = await User.create(req.body);
-      res.json(user);
     } catch (err) {
       res.status(500).json(err);
     }
