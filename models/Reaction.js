@@ -26,10 +26,10 @@ const reactionSchema = new Schema(
     },
   },
   {
+    id: false,
     toJSON: {
       getters: true,
     },
-    id: false,
   }
 );
 

@@ -122,20 +122,22 @@ module.exports = {
     // Delete a reaction
     async deleteReaction(req, res) {
       try {
-  
-        const reaction = await Thought.findOneAndUpdate(
+        // Find the thought with the given thoughtId and remove the reaction with the given reactionId
+        const dbThoughtData = await Thought.findOneAndUpdate(
           { _id: req.params.thoughtId },
-          { $pull: { users: req.params.reactionId } },
-          { new: true }
+          { $pull: { reaction: { reactionId: req.params.reactionId } } },
+          { runValidators: true, new: true}
         );
-  
-        if (!reaction) {
+
+        // If no thought is found with the given thoughtId, return a 404 response
+        if (!dbThoughtData) {
           return res.status(404).json({
-            message: 'Reaction deleted',
+            message: 'No thought with this ID',
           });
         }
-  
-        res.json({ message: 'Reaction successfully deleted' });
+
+        // Otherwise, return the updated thought data
+        res.json({dbThoughtData});
       } catch (err) {
         console.log(err);
         res.status(500).json(err);
