@@ -21,6 +21,9 @@ Once open on your local machine, run `mongod` within the terminal. Open another 
 
 ## Usage
 
+A walkthrough of this application can be viewed here:
+https://www.youtube.com/watch?v=stauBkN6wIc
+
 Within Insomnia, you can run several API routes to query the user and thought documents. Each route is described below:
 
 `/api/users`
