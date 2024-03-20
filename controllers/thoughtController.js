@@ -18,6 +18,7 @@ module.exports = {
       const thought = await Thought.findOne({ _id: req.params.thoughtId })
         .select('-__v');
 
+        // if no thought, error out
       if (!thought) {
         return res.status(404).json({ message: 'No thought with that ID' });
       }
@@ -63,6 +64,7 @@ module.exports = {
     try {
       const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
 
+      // if no thought, error out
       if (!thought) {
         res.status(404).json({ message: 'No thought with that ID' });
       } else {
@@ -83,6 +85,7 @@ module.exports = {
         { runValidators: true, new: true }
       );
 
+      // If no thought, error out
       if (!thought) {
         res.status(404).json({ message: 'No thought with this id!' });
       } else {
@@ -98,6 +101,7 @@ module.exports = {
     console.log('You are adding a reaction!');
     console.log(req.body);
 
+    // find the associated thought object and push this reaction to the set
     try {
       const reaction = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
@@ -105,12 +109,14 @@ module.exports = {
         { runValidators: true, new: true }
       );
 
+      // if no thought exists, error out
       if (!reaction) {
         return res
           .status(404)
           .json({ message: 'No thought found with that ID :(' });
       } else {
 
+      // pass this reaction to the thought's reacion array
       res.json(reaction);
       }
     } catch (err) {

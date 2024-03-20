@@ -47,10 +47,12 @@ module.exports = {
     try {
       const user = await User.findOneAndRemove({ _id: req.params.userId });
 
+      // if no user exists, error out
       if (!user) {
         return res.status(404).json({ message: 'No such user exists' });
       }
 
+      // otherwise, pull the user from the user list
       const thought = await Thought.findOneAndUpdate(
         { users: req.params.userId },
         { $pull: { users: req.params.userId } },
@@ -79,6 +81,7 @@ module.exports = {
         { runValidators: true, new: true }
       );
 
+      // if no user exists, error out
       if (!user) {
         res.status(404)
         .json({ message: 'No user with this id!' });
@@ -102,6 +105,7 @@ module.exports = {
         { runValidators: true, new: true }
       );
 
+      // if no user exists, error out
       if (!user) {
         return res
           .status(404)
@@ -124,6 +128,7 @@ module.exports = {
         { runValidators: true, new: true }
       );
 
+      // if no user exists, error out
       if (!user) {
         return res
           .status(404)
